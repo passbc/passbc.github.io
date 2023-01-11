@@ -1,0 +1,625 @@
+<html>
+<body>
+
+================================ Password salting & Hashing=============================
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+public class Hash
+{
+public static void main(String[] args)
+{
+String password = "secret1234";
+MessageDigest md;
+try
+{
+// Select the message digest for the hash computation -> SHA-256
+md = MessageDigest.getInstance("SHA-256");
+// Generate the random salt
+SecureRandom random = new SecureRandom();
+byte[] salt = new byte[16];
+random.nextBytes(salt);
+// Passing the salt to the digest for the computation
+md.update(salt);
+// Generate the salted hash
+byte[] hashedPassword =
+md.digest(password.getBytes(StandardCharsets.UTF_8));
+StringBuilder sb = new StringBuilder();
+for (byte b : hashedPassword)
+sb.append(String.format("%02x", b));
+System.out.println("\nThe hash for password is:"+sb);
+}
+catch (NoSuchAlgorithmException e)
+{
+// TODO Auto-generated catch block
+e.printStackTrace();
+}
+}
+}
+
+
+=====================================SUBSTITUTION CIPHER =====================================================
+
+import java.io.*;
+public class Substitution
+{
+int offset=7;
+public String encrypt(String s)throws IOException
+{
+StringBuffer sb = new StringBuffer();
+for (int i=0; i < s.length(); i++)
+{
+char t = s.charAt(i);
+if ((t >= 'A') && (t <= 'Z') )
+{
+int t1 =t - 'A' + offset; //typecast to char as 2 is int
+t1=t1%26;
+sb.append((char)(t1+'A'));
+}
+else if((t >= 'a') && (t <= 'z'))
+{
+int t1 =t - 'a' + offset;
+t1=t1%26;
+sb.append((char)(t1+'a'));
+}
+}
+return sb.toString();
+}
+public String decrypt(String s)throws IOException
+{
+StringBuffer sb = new StringBuffer();
+for (int i=0; i < s.length(); i++)
+{
+char t = s.charAt(i);
+if ((t >= 'A') && (t <= 'Z') )
+{
+int t1 =t - 'A' - offset; //typecast to char as 2 is int
+if(t1<0) t1 = 26 + t1;
+sb.append((char)(t1+'A'));
+}
+if ((t >= 'a') && (t <= 'z') )
+{
+int t1 =t - 'a' - offset; //typecast to char as 2 is int
+if(t1<0) t1 = 26 + t1;
+sb.append((char)(t1+'a'));
+}
+}
+return sb.toString();
+}
+public static void main(String[] args)throws IOException
+{
+BufferedReader b;
+System.out.println("\n\t\tSubstitution Cipher Technique");
+System.out.print("\nEnter the string :");
+b=new BufferedReader(new InputStreamReader(System.in));
+String oriStr=b.readLine();
+Substitution s=new Substitution();
+String encStr=s.encrypt(oriStr);//create object of caesar and call encrypt
+System.out.println("\nThe encrypted string is:" + encStr);
+String decStr=s.decrypt(encStr);
+System.out.println("\nThe decrypted string is:" + decStr);
+}
+}
+
+
+WE HAVE TO GIVE STRING EG: thisiswaytocreatesubstitutioncipher
+
+========================================== VIGENERE CIPHER ====================================
+
+public class VigenereCipher
+{
+public static void main(String[] args)
+{
+ System.out.println("\n\t\tVigenere Cipher Technique");
+String key = "CIPHER";
+ String ori = "thiscryptosystemisnotsecure";
+ String enc = encrypt(ori, key);
+ System.out.println("\n"+"The plain text is:"+ori);
+ System.out.println("\n"+"The encrypted text is:"+enc);
+ System.out.println("\n"+"The decrypted text is:"+decrypt(enc, key));
+}
+static String encrypt(String text, final String key)
+{
+ String res = "";
+ text = text.toUpperCase();
+ for (int i = 0, j = 0; i < text.length(); i++)
+{
+char c = text.charAt(i);
+ if (c < 'A' || c > 'Z') continue;
+ res += (char)((c + key.charAt(j) - 2 * 'A') % 26 + 'A');
+ j = ++j % key.length();
+ }
+ return res;
+ }
+static String decrypt(String text, final String key)
+{
+ String res = "";
+ text = text.toUpperCase();
+ for (int i = 0, j = 0; i < text.length(); i++)
+{
+ char c = text.charAt(i);
+if (c < 'A' || c > 'Z') continue;
+ res += (char)((c - key.charAt(j) + 26) % 26 + 'A');
+ j = ++j % key.length();
+ }
+ return res;
+ }
+}
+
+=========================================== AFFINE CIPHER ======================================
+
+class Affine
+{
+static int a = 5;
+static int b = 8;
+static String Message(char[] msg)
+{
+String cipher = "";
+for (int i = 0; i < msg.length; i++)
+{
+if (msg[i] != ' ')
+{
+cipher = cipher + (char) ((((a * (msg[i] - 'A')) + b) % 26) + 'A');
+}
+else
+{
+cipher += msg[i];
+}
+}
+return cipher;
+}
+static String Cipher(String cipher)
+{
+String msg = "";
+int a_inv = 0;
+int flag = 0;
+for (int i = 0; i < 26; i++)
+{
+flag = (a * i) % 26;
+if (flag == 1)
+{
+a_inv = i;
+}
+}
+for (int i = 0; i < cipher.length(); i++)
+{
+if (cipher.charAt(i) != ' ')
+{
+msg = msg + (char) (((a_inv * ((cipher.charAt(i) + 'A' - b)) %
+26)) + 'A');
+}
+else
+{
+msg += cipher.charAt(i);
+} 
+}
+return msg;
+}
+public static void main(String[] args)
+{
+System.out.println("\n\t\tAffine Cipher Technique");
+String msg = "ITSCOOL";
+String cipherText = Message(msg.toCharArray());
+System.out.println("\nEncrypted Message is : " + cipherText);
+System.out.println("\nDecrypted Message is: " + Cipher(cipherText));
+}
+}
+
+======================================== CRYPTANALYSIS OF CAESAR CIPHER =========================================
+
+import java.util.Scanner;
+public class Caesar1
+{
+char [] input;
+int key;
+void bruteforce()
+{
+Scanner sc = new Scanner(System.in);
+System.out.print("Enter the String : ");
+String ip = sc.nextLine();
+input = ip.toCharArray();
+for(key=1;key<27;key++)
+{
+for(int i=0;i<input.length;i++)
+{
+if(input[i] == ' ')
+continue;
+else
+{
+if(input[i] >='A' && input[i] <='Z')
+{
+input[i] = (char) (input[i] - key);
+if(input[i] < 'A')
+{
+input[i] = (char) (input[i] + 26);
+}
+}
+else
+{
+input[i] = (char) (input[i] - key);
+if(input[i] < 'a')
+{
+input[i] = (char) (input[i] + 26);
+}
+}
+}
+}
+System.out.println("Key = " + key + " Decrypted String : " +
+String.valueOf(input));
+input = ip.toCharArray();
+}
+}
+public static void main(String[] args)
+{
+new Caesar1().bruteforce();
+}
+}
+
+enter the string : kwum pmzm
+============================================ AES ALGORITHM ===============================================
+
+import java.io.FileInputStream;  
+import java.io.FileOutputStream;  
+import java.io.IOException;  
+import java.io.InputStream;  
+import java.io.OutputStream;  
+import java.security.InvalidAlgorithmParameterException;  
+import java.security.InvalidKeyException;  
+import java.security.NoSuchAlgorithmException;  
+import java.security.spec.AlgorithmParameterSpec;  
+import javax.crypto.Cipher;  
+import javax.crypto.CipherInputStream;  
+import javax.crypto.CipherOutputStream;  
+import javax.crypto.KeyGenerator;  
+import javax.crypto.NoSuchPaddingException;  
+import javax.crypto.SecretKey;  
+import javax.crypto.spec.IvParameterSpec;   
+public class AES
+{  
+	//creating an instance of the Cipher class for encryption  
+	private static Cipher encrypt;  
+	//creating an instance of the Cipher class for decryption  
+	private static Cipher decrypt;  
+	//initializing vector  
+	private static final byte[] initialization_vector = { 55,48,56,89,75,48,36,3,6,4,85,96,41,16,25,28};  
+	//main() method  
+	public static void main(String[] args)   
+	{  
+		//path of the file that we want to encrypt  
+		String textFile = "C:/Users/Rathod/Desktop/M.Sc.C.S- Sem -3-Security/Practicals/demo.txt";  
+		//path of the encrypted file that we get as output  
+		String encryptedData = "C:/Users/Rathod/Desktop/M.Sc.C.S- Sem -3-Security/Practicals/aesenc.txt";  
+		//path of the decrypted file that we get as output  
+		String decryptedData = "C:/Users/Rathod/Desktop/M.Sc.C.S- Sem -3-Security/Practicals/aesdec.txt";  
+		try   
+		{  
+			//generating keys by using the KeyGenerator class  
+			SecretKey scrtkey = KeyGenerator.getInstance("AES").generateKey();  
+			AlgorithmParameterSpec aps = new IvParameterSpec(initialization_vector);  
+			//setting encryption mode  
+			encrypt = Cipher.getInstance("AES/CBC/PKCS5Padding");  
+			encrypt.init(Cipher.ENCRYPT_MODE, scrtkey, aps);  
+			//setting decryption mode  
+			decrypt = Cipher.getInstance("AES/CBC/PKCS5Padding");  
+			decrypt.init(Cipher.DECRYPT_MODE, scrtkey, aps);  
+			encryption(new FileInputStream(textFile), new FileOutputStream(encryptedData));  
+			decryption(new FileInputStream(encryptedData), new FileOutputStream(decryptedData));  
+			System.out.println("The encrypted and decrypted files using AES have been created successfully.");  
+		}   
+		catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IOException e)   
+		{  
+			e.printStackTrace();  
+		}  
+	}  
+	private static void encryption(InputStream input, OutputStream output) throws IOException   
+	{  
+		output = new CipherOutputStream(output, encrypt);  
+		writeBytes(input, output);  
+	}   
+	private static void decryption(InputStream input, OutputStream output) throws IOException   
+	{  
+		input = new CipherInputStream(input, decrypt);  
+		writeBytes(input, output);  
+	}  
+	private static void writeBytes(InputStream input, OutputStream output) throws IOException   
+	{  
+		byte[] writeBuffer = new byte[512];  
+		int readBytes = 0;  
+		while ((readBytes = input.read(writeBuffer)) >= 0)   
+		{  
+			output.write(writeBuffer, 0, readBytes);  
+		}  
+		output.close();  
+		input.close();  
+	}   
+}  
+
+FOR AES WE NEED TO CREATE DEMO.TXT,AESENC.TXT,AESDEC.TXT FILE IN SAME FOLDER AND ONLY IN DEMO.TXT(PLAIN TEXT HAVE TO WRITE)
+
+=========================================== DES ALGORITHM ==================================
+
+import java.io.FileInputStream; 
+import java.io.FileOutputStream; 
+import java.io.IOException; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.security.InvalidAlgorithmParameterException; 
+import java.security.InvalidKeyException; 
+import java.security.NoSuchAlgorithmException; 
+import java.security.spec.AlgorithmParameterSpec; 
+import javax.crypto.Cipher; 
+import javax.crypto.CipherInputStream; 
+import javax.crypto.CipherOutputStream; 
+import javax.crypto.KeyGenerator; 
+import javax.crypto.NoSuchPaddingException; 
+import javax.crypto.SecretKey; 
+import javax.crypto.spec.IvParameterSpec; 
+public class DES 
+{ 
+private static Cipher encrypt; 
+private static Cipher decrypt; 
+private static final byte[] initialization_vector = { 22, 33, 11, 44, 55, 99, 66, 77 }; 
+public static void main(String[] args) 
+{ 
+String textFile = "C:/Users/Rathod/Desktop/M.Sc.C.S- Sem -3-Security/Practicals/DemoData.txt"; 
+String encryptedData = "C:/Users/Rathod/Desktop/M.Sc.C.S- Sem -3-Security/Practicals/encrypteddata.txt"; 
+String decryptedData = "C:/Users/Rathod/Desktop/M.Sc.C.S- Sem -3-Security/Practicals/decrypteddata.txt"; 
+try 
+{ 
+SecretKey scrtkey = KeyGenerator.getInstance("DES").generateKey(); 
+AlgorithmParameterSpec aps = new 
+IvParameterSpec(initialization_vector); 
+
+encrypt = Cipher.getInstance("DES/CBC/PKCS5Padding"); 
+encrypt.init(Cipher.ENCRYPT_MODE, scrtkey, aps); 
+decrypt = Cipher.getInstance("DES/CBC/PKCS5Padding"); 
+decrypt.init(Cipher.DECRYPT_MODE, scrtkey, aps); 
+encryption(new FileInputStream(textFile), new 
+FileOutputStream(encryptedData)); 
+decryption(new FileInputStream(encryptedData), new 
+FileOutputStream(decryptedData)); 
+System.out.println("The encrypted and decrypted files have been created successfully."); 
+} 
+
+catch (NoSuchAlgorithmException | NoSuchPaddingException | 
+InvalidKeyException | InvalidAlgorithmParameterException | IOException e) 
+{ 
+e.printStackTrace(); 
+} 
+} 
+private static void encryption(InputStream input, OutputStream output) throws 
+IOException 
+{ 
+output = new CipherOutputStream(output, encrypt); 
+writeBytes(input, output); 
+} 
+private static void decryption(InputStream input, OutputStream output) throws 
+IOException 
+{ 
+input = new CipherInputStream(input, decrypt); 
+writeBytes(input, output); 
+} 
+private static void writeBytes(InputStream input, OutputStream output) throws 
+IOException 
+{ 
+byte[] writeBuffer = new byte[512]; 
+int readBytes = 0; 
+while ((readBytes = input.read(writeBuffer)) >= 0) 
+{ 
+output.write(writeBuffer, 0, readBytes); 
+
+} 
+output.close(); 
+input.close(); 
+} 
+} 
+
+FOR  DES WE NEED TO CREATE DEMODATA.TXT,ENCRYPTEDDATA.TXT,DECRYPTEDDATA.TXT AND ONLY IN DEMODATA( PLAIN TEXT HAVE TO WRITE)
+
+============================================= HMAC FOR SIGNING MSG ===============================================
+
+      HMAC.JAVA
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+public class HMAC
+{
+static public byte[] calcHmacSha256(byte[] secretKey, byte[] message)
+{
+byte[] hmacSha256 = null;
+try
+{
+Mac mac = Mac.getInstance("HmacSHA256");
+SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey,
+"HmacSHA256");
+mac.init(secretKeySpec);
+hmacSha256 = mac.doFinal(message);
+}
+catch (Exception e)
+{
+throw new RuntimeException("Failed to calculate hmac-sha256", e);
+}
+return hmacSha256;
+}
+}
+
+       MAIN.JAVA
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.util.Base64;
+public class Main
+{
+public static void main(String[] args)
+{
+try
+{
+byte[] hmacSha256 =
+HMAC.calcHmacSha256("secret123".getBytes("UTF-8"), "its use of hmac".getBytes("UTF8"));
+System.out.println(String.format("\nHex: %064x", new BigInteger(1,
+hmacSha256)));
+String base64HmacSha256 =
+Base64.getEncoder().encodeToString(hmacSha256);
+System.out.println("Base64: " + base64HmacSha256);
+}
+catch (UnsupportedEncodingException e)
+{
+e.printStackTrace();
+}
+}
+}
+
+============================================ RSA ALGORITHM ===================================
+
+import java.math.*;
+import java.security.*;
+public class RSAalgo
+{
+BigInteger p,q,n,d,e,ph,t;
+SecureRandom r;
+public RSAalgo()
+{
+r=new SecureRandom();
+p=new BigInteger(512,100,r);
+q=new BigInteger(512,100,r);
+System.out.println("\n\n\t\tRSA Encryption Algorithm");
+System.out.println("\nPrime no. p = "+p.intValue());
+System.out.println("\nPrime no. q = "+q.intValue());
+n=p.multiply(q);
+ph=(p.subtract(new BigInteger("1")));
+ph=ph.multiply(q.subtract(new BigInteger("1")));
+e=new BigInteger("2"); //initial value for e
+while(ph.gcd(e).intValue() > 1 || e.compareTo(ph) !=-1)
+e = e.add(new BigInteger("1"));
+d=e.modInverse(ph);
+System.out.println("\nPublic key = ("+n.intValue()+" , " +e.intValue()+")");
+System.out.println("\nPrivate key = ("+n.intValue()+" , " + d.intValue()+")");
+BigInteger msg= new BigInteger("100");
+System.out.println("\nMessage is: "+msg);
+BigInteger enmsg=encrypt(msg,e,n);
+System.out.println("\nEncrypted msg is: "+enmsg.intValue());
+BigInteger demsg=decrypt(enmsg,d,n);
+System.out.println("\nDecrypted msg is: "+demsg.intValue());
+}
+BigInteger encrypt(BigInteger msg,BigInteger e,BigInteger n)
+{
+return msg.modPow(e,n);
+}
+BigInteger decrypt(BigInteger msg,BigInteger d,BigInteger n)
+{
+return msg.modPow(d,n);
+}
+public static void main(String[] args)
+{
+new RSAalgo();
+}
+}
+
+======================================================= ELGAMAL CRYPTOSYSTEM =========================================
+
+import java.util.*;
+import java.math.BigInteger;
+public class elgamal
+{
+public static void main(String[] args)
+{
+Scanner stdin = new Scanner(System.in);
+Random r = new Random();
+// Get user input for p.
+System.out.println("Enter the approximate value of the prime number for your El Gamal key.");
+BigInteger p = getNextPrime(stdin.next());
+// Calculate a generator.
+BigInteger g = getGenerator(p, r);
+// We found a generator, so let's do the rest of it.
+if (g != null)
+{
+// Pick a secret a, not 0 or 1.
+BigInteger a = new BigInteger(p.bitLength()+1, r);
+a = a.mod(p);
+if (a.equals(BigInteger.ZERO) || a.equals(BigInteger.ONE))
+a = a.add(new BigInteger("2"));
+// Calculate the corresponding public b.
+BigInteger b = g.modPow(a, p);
+// Print out our public keys.
+System.out.println("Post p = "+p+" g = "+g+" b = "+b);
+// When we send a message, the sender picks a random k.
+// I make sure it's never 0 or 1.
+BigInteger k = new BigInteger(p.bitLength()+1, r);
+k = k.mod(p);
+if (k.equals(BigInteger.ZERO) || k.equals(BigInteger.ONE))
+k = k.add(new BigInteger("2"));
+// Here, the sender starts calculating parts of the ciphertext that
+// don't involve the actual message.
+BigInteger c1 = g.modPow(k, p);
+BigInteger c2 = b.modPow(k, p);
+// Here we get the message from the user.
+System.out.println("Please enter your message. It should be in between 1 and "+p);
+BigInteger m = new BigInteger(stdin.next());
+// Now, we can calculate the rest of the second ciphertext.
+c2 = c2.multiply(m);
+c2 = c2.mod(p);
+// Print out the two ciphertexts.
+System.out.println("The corresponding cipher texts are c1 = "+c1+" c2 = "+c2);
+// First, determine the inverse of c1 raised to the a power mod p.
+BigInteger temp = c1.modPow(a,p);
+temp = temp.modInverse(p);
+// Print this out.
+System.out.println("Here is c1^ -a = "+temp);
+// Now, just multiply this by the second ciphertext
+BigInteger recover = temp.multiply(c2);
+recover = recover.mod(p);
+// And this will give us our original message back!
+System.out.println("The original message = "+recover);
+}
+else
+System.out.println("Sorry, a generator for your prime couldn't be found.");
+}
+// Incrementally tries each BigInteger starting at the value passed in as a parameter until one of them is tests as being prime.
+public static BigInteger getNextPrime(String ans)
+{
+BigInteger one = new BigInteger("1");
+BigInteger test = new BigInteger(ans);
+while (!test.isProbablePrime(99))
+test = test.add(one);
+return test;
+}
+// Precondition - p is prime and it's reasonably small, say, no more than 5,000,000. If it's larger, this method will be quite time-consuming.
+// Postcondition - if a generator for p can be found, then it is returned if no generator is found after 1000 tries, null is returned.
+public static BigInteger getGenerator(BigInteger p, Random r)
+{
+int numtries = 0;
+// Try finding a generator at random 100 times.
+while (numtries < 1000)
+{
+ // Here's what we're trying as the generator this time.
+ BigInteger rand = new BigInteger(p.bitLength()+1,r);
+rand = rand.mod(p);
+ BigInteger exp = BigInteger.ONE;
+ BigInteger next = rand;
+// These are bad choices!
+if (next.equals(BigInteger.ZERO) || next.equals(BigInteger.ONE))
+continue;
+// We exponentiate our generator until we get 1 mod p.
+ while (!next.equals(BigInteger.ONE))
+{
+ next = (next.multiply(rand)).mod(p);
+ exp = exp.add(BigInteger.ONE);
+ }
+// If the first time we hit 1 is the exponent p-1, then we have a generator.
+if (exp.equals(p.subtract(BigInteger.ONE)))
+ return rand;
+numtries++;
+}
+// None of the 1000 values we tried was a generator.
+return null;
+}
+}
+
+enter : 6
+enter : 5
+===================================================================================
+
+<body>
+</html>
