@@ -99,6 +99,67 @@ action > allow > protocol > ICMP > Remote Ip: 0.0.0.0 > add
 
 ping all pc to server address we did nt pass ping to server
 go to pc > web brower > server ip address path http://------
+
+====================================================== ADHOC network ====================================================
+router wireless 2, pc - 2, laptop -2
+
+connect wwirelesss router 1 (ethernet0/1) with copper cross wire to wireless router 2 with same
+wireless pc and laptop power of/on with wmp00N
+give 1 pc name IT deparment pc 1 and  laptop name cs department laptop 1, and same for pc2 and laptop2
+give one router name cs department and onther IT
+
+cs department > GUI > internet hould be DHCP with subnet mak 255.255.255.0 and ame for IT department router
+it department pc1 > ireles > select DHCP > ip  : 192.168.0.100 and subnet mask
+it department pc2 > wireless > DHCP > ip : 192.168.0.100 and subnet mask
+cs department laptop1 > wireless > DHCP > ip : 192.168.0.102 and subnet mask
+cs department laptop2 > wireless > DHCP > ip : 192.168.0.103 and subnet mask
+
+wireless router > wireless tab > SSID: CS and under security tab select WAP2 Peronal and give passohrase ; CSdepartment
+same for IT : ITdepartment
+go to management tab > administartor > Enable same for both routers
+open any pc > desktop > pcwirelss > click : connecct > select IT and connect and give WAPT ; ITdepartment and ame for do CS also
+
+============================================= Basic IP setting ============================================================
+
+router 2, Access point 2 ,pc - 4
+router 1 > add HWIC2T in both router for serial ports and connect them se00/0
+connect router 1 to access point with fa0/0 and ame for router 2
+do wireless all pc power off/on
+router 0 > fa0/0 > ip : 192.168.0.1 and subnet mask > RIP : 192.168.0.0
+router 0 > se0/0/0 > ip ; 20.0.0.1 and subnet mask > RIP : 20.0.0.0
+router 1 > fa0/0 > ip : 172.16.10.1 and subnet mask > RIP : 192.168.0.0
+router 1 > se0/0/0 > ip ; 20.0.0.2 and subnet mask > RIP : 20.0.0.0
+pc0 > wireless > ip : 192.168.1.2 > subnet mask > gateway : 192.168.0.1
+pc1 > wireless > ip : 192.168.1.3 > subnet maskv> gateway : 192.168.0.1
+pc2 > wireless > ip : 172.16.10.2 > subnet mask > gateway ; 172.16.10.1
+pc3 > wireless > ip : 172.16.10.3> subnet mask > gateway : 172.16.10.1
+
+accesspoint 1 > config > port 1 > SSID : Cs and ame for acess point 2 with it
+select WPA2-PSKand pasword : csdepartment and ame for IT
+pc > config > wwireless0 > SSID cs > WPA2=PSK  and pass phrase ; csdepartment and same for IT
+2 pc for cs and 2 pc for IT
+and send package or ping
+
+===================================================== Radio Interface =====================================
+
+Objective:  How to configure radio settings for the wireless device.
+
+Enabling the Radio Interface 
+The wireless device radios are disabled by default. 
+
+Beginning in privileged EXEC mode, follow these steps to enable the access point radio:
+
+
+
+Use the shutdown command to disable the radio port. 
+Configuring Radio Data Rates
+You use the data rate settings to choose the data rates the access point/bridge uses for data transmission. The rates are expressed in megabits per second. The access point/bridge always attempts to transmit at the highest data rate set to Basic, also called Require on the browser-based interface. If there are obstacles or interference, the access point/bridge steps down to the highest rate that allows data transmission. You can set each data rate to one of three states:
+•Basic (this is the default state for all data rates)—Allows transmission at this rate for all packets, both unicast and multicast. At least one of the access point/bridge's data rates must be set to Basic.
+•Enabled—The access point/bridge transmits only unicast packets at this rate; multicast packets are sent at one of the data rates set to Basic.
+•Disabled—The access point/bridge does not transmit data at this rate.
+
+
+
  
 </pre>
 <body>
