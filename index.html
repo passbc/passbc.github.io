@@ -1,166 +1,166 @@
 <html>
 <body>
 <pre>
-====================================  WEP =============================================
-Router(wired)-1----[Router0]=1841
-Router(wireless)-1---[Wireless Router0]=WRT300N
-PC-2 to connect Router(Wired)
-Switch-1
-Laptop-1 to connect Router(wireless)
-PC-1 to connect Router(wireless)
-Step-1
-Connect Router0(fa0/0) to server (fa0/1) with Copper-straight-Wire
-Connect PC0(fa0/0) to server (fa0/2) with Copper-straight-Wire
-Connect PC1(fa0/0) to server (fa0/3) with Copper-straight-Wire
-Connect Server(fa0/4) to Router(wireless) (ethernet0/1) with Copper-straight-Wire
-Step-2
-config Router0,PC0,PC1
-1. router0=> Config=> fastethernet0/0=> give IPV4 add: 192.168.1.1 and subnet mask: 255.255.255.0
-2. PC0=> Config=> fastethernet0/0=> give IPV4 add: 192.168.1.50 and subnet mask: 255.255.255.0
-1. PC1=> Config=> fastethernet0/0=> give IPV4 add: 192.168.1.51 and subnet mask: 255.255.255.0
-Step-3
-config Router(wireless),Laptop(wireless),PC(wireless)
-1.Router(wireless)=> GUI tab => Wireless tab => SSID name- wifi => save setting
-wireless tab=> Wireless security=> select WEP in dropdown list and enter Key1=1a2b3c4d5e=> save setting
-Router(wireless)=> GUI tab => setup => give ip add: 192.168.1.2 => save setting
-2. Laptop(go to physical tab and switch off the power then remove wire and add wpc300N wireless and turn on the power)
-Laptop => config => wireless button => give SSID-wifi and select WEP => enter Key= 1a2b3c4d5e 
-same step for PC2 also for wireless connection
-3. Laptop => Desktop => commandPrompt =>
- ping 192.168.1.2(router-wireless)
- ping 192.168.1.50(pc1)
- ping 192.168.1.51(pc2)
- ===================================================  Distribution Layer=====================================================================================
- router 0,router 1, router 2, router 3
-switchs - 2
-pc - 4
-step-1
-1. router 0 and router 1 > physical > WIC1ENET drag and drop power off > we will get ethernet0/1/0
-2.connect router 1 (ethernet0/1/0)with copper cross wire) to router 2 (ethernet0/1/0)
-3.connect router 0 (fa0/0) to router2(fa0/0)
-4.connect router 2 (fa0/1) to router1 (fa0/1)
-5.connect router 0 (fa0/1) to router 3 (fa0/1)
-6.connect router 1 (fa0/0) to router 3 (fa0/0)
-7.router 2 and router 1  > physical > WIC1ENET drag and drop power off > we will get ethernet0/1/0
-8.connect router 2 (ethernet0/1/0) to switch(fa0/1)
-9.connect router 3 (ethernet/1/0) to switch(fa0/1)
-10.connect switch(fa0/2) to pc0 (fa0) 
-11.connect switch(fa0/3) to pc2 (fa0)
-12.connect switch(fa0/2) to pc1 (fa0)
-13.connect switch(fa0/3) to pc3 (fa0)
+============================ ONE DDIMENSIONAL =======================================================
+list1 = ['Egypt', 'chemistry', 2017, 2018]
+list2 = [1, 2, 3, [4, 5]]
+list3 = ["a", 3.7, '330', "Omar"]
+print (list1[2])
+print (list2 [3:])
+print (list3 [-3:-1])
+print (list3[-3])
 
-step-2 config router0,,router1,router2,router3,router4,pc0,pc1,pc2,pc3
+import pandas as pd
+import numpy as np
+data=np.array(["Gaurav","Rohit","Ankur","Swaraj"])
+s1=pd.Series(data)
+s1
 
-router 0 > ethernet0/1/0 > ip add: 192.168.2.1 and subnet mask 255.255.255.0 > give RIP : 192.168.1.0
-router 0> fa0/1 > ip add: 192.168.3.1 and subnet mask: 255.255.255.0 > give RIP : 192.168.3.0
-router 0> fa0/0 > ip add: 192.168.1.1 and subnet mask: 255.255.255.0 > give RIP : 192.168.1.0
+s1[1:3]
 
-router 1 > ethernet0/1/0 > ip add: 192.168.2.2 and subnet mask 255.255.255.0 > give RIP :  192.168.4.0
-router 1> fa0/1 > ip add: 192.168.5.2 and subnet mask: 255.255.255.0 > give RIP : 192.168.5.0
-router 1> fa0/0 > ip add: 192.168.4.1 and subnet mask: 255.255.255.0 > give RIP : 192.168.4.1
+import pandas as pd
+import numpy as np
+arr1=pd.Series([22,34,23,65,67] , index=["a","b","c","d","e"],name="Marks")
+arr2=pd.Series([12,39,35,80,99] , index=["a","b","c","d","e"],name="Sheets")
+arr1
 
-router 2 > ethernet0/1/0 > ip add: 192.168.6.1 and subnet mask 255.255.255.0 > give RIP :  192.168.6.0
-router 2> fa0/1 > ip add: 192.168.5.1 and subnet mask: 255.255.255.0 > give RIP : 192.168.5.0
-router 2> fa0/0 > ip add: 192.168.1.2 and subnet mask: 255.255.255.0 > give RIP : 192.168.1.0
+arr2
 
-router 3 > ethernet0/1/0 > ip add: 192.168.7.1 and subnet mask 255.255.255.0 > give RIP : 192.168.7.0
-router 3> fa0/0 > ip add: 192.168.4.2 and subnet mask: 255.255.255.0 > give RIP : 192.168.4.0
-router 3> fa0/1 > ip add: 192.168.3.2 and subnet mask: 255.255.255.0 > give RIP : 192.168.3.0
+print("Mean of arr1 is : ",arr1.mean())
+print("Median of arr2 is : ", arr2.median())
 
-pc0 > fa0 > ip add: 192.168.6.21 > subnet mask : 255.255.255.0 > gateway : 192.168.6.1
-pc1 > fa0 > ip add: 192.168.7.21 > subnet mask : 255.255.255.0 > gateway : 192.168.7.1
-pc2 > fa0 > ip add: 192.168.6.22 > subnet mask : 255.255.255.0 > gateway : 192.168.6.1
-pc3 > fa0 > ip add: 192.168.7.22 > subnet mask : 255.255.255.0 > gateway : 192.168.6.1
+arr2.mean()
 
-step-3  go to simulation > edit filters > select ICMP and RIP > click play
-step- 4 go to realtime > ping from pc0 to pc1,pc2,pc3 and ping from pc1 to pc0,pc2,pc3
+arr3=arr1*arr2
+arr3
 
-============================================ network firewall ===================================
-server 1, wireless router 1,pc 2
+np.exp(arr1)
 
-connect server fa0 to wireless router (ethernet0/1)
+np.exp(arr2)
 
-wireless router > GUI > give DHCP configuration in internet setup
-server > desktop > ip configuration > DHCP
-same for pc0,pc1
+std=pd.Series([12,13,14,15],index=["a","b","c","d"],name="Students")
+std
 
-ping all pc:
-pc > desktop > cmd > type server address
+std=std.rename("data")
+print(std.name)
 
-pc > desktop > browser > typec: server address
-same for all pc
+std
 
-server > desktop > firewall(ipv4) > set rule
-rule 1 which we cant pass ping to server
-rule 2 which we can acces the server through web brower
+================================= TWO DIMENSIONAL -=================================================
 
-action > deny > protocol > ICMP > Remote Ip: 0.0.0.0 > add
-action > allow > protocol > ICMP > Remote Ip: 0.0.0.0 > add
+import pandas as pd
+import numpy as np
+data=pd.DataFrame([12,13,14,15],index=["a","b","c","d"],columns=["Marks"])
+data
 
-ping all pc to server address we did nt pass ping to server
-go to pc > web brower > server ip address path http://------
+import pandas as pd
+import numpy as np
+data_1=(["tom",4],["harry",3],["jerry",5])
+df=pd.DataFrame(data_1)
+df
 
-====================================================== ADHOC network ====================================================
-router wireless 2, pc - 2, laptop -2
+df.index=("std-1","std-2","std-3")
+df.columns=["Names","Age"]
 
-connect wwirelesss router 1 (ethernet0/1) with copper cross wire to wireless router 2 with same
-wireless pc and laptop power of/on with wmp00N
-give 1 pc name IT deparment pc 1 and  laptop name cs department laptop 1, and same for pc2 and laptop2
-give one router name cs department and onther IT
+import pandas as pd
+import numpy as np
+dict_1={
+    
+    "Name" : ["Ankur","Rohit","Swaraj","Gaurav"],
+    "Age" : [23,25,28,29]
+}
 
-cs department > GUI > internet hould be DHCP with subnet mak 255.255.255.0 and ame for IT department router
-it department pc1 > ireles > select DHCP > ip  : 192.168.0.100 and subnet mask
-it department pc2 > wireless > DHCP > ip : 192.168.0.100 and subnet mask
-cs department laptop1 > wireless > DHCP > ip : 192.168.0.102 and subnet mask
-cs department laptop2 > wireless > DHCP > ip : 192.168.0.103 and subnet mask
+import pandas as pd
+import numpy as np
+dict_1={
+    
+    "Name" : ["Ankur","Rohit","Swaraj","Gaurav"],
+    "Age" : [23,25,28,29]
+}
 
-wireless router > wireless tab > SSID: CS and under security tab select WAP2 Peronal and give passohrase ; CSdepartment
-same for IT : ITdepartment
-go to management tab > administartor > Enable same for both routers
-open any pc > desktop > pcwirelss > click : connecct > select IT and connect and give WAPT ; ITdepartment and ame for do CS also
+df=pd.DataFrame(dict_1 ,index=["std1","std2","std3","std4"])
 
-============================================= Basic IP setting ============================================================
+df
 
-router 2, Access point 2 ,pc - 4
-router 1 > add HWIC2T in both router for serial ports and connect them se00/0
-connect router 1 to access point with fa0/0 and ame for router 2
-do wireless all pc power off/on
-router 0 > fa0/0 > ip : 192.168.0.1 and subnet mask > RIP : 192.168.0.0
-router 0 > se0/0/0 > ip ; 20.0.0.1 and subnet mask > RIP : 20.0.0.0
-router 1 > fa0/0 > ip : 172.16.10.1 and subnet mask > RIP : 192.168.0.0
-router 1 > se0/0/0 > ip ; 20.0.0.2 and subnet mask > RIP : 20.0.0.0
-pc0 > wireless > ip : 192.168.1.2 > subnet mask > gateway : 192.168.0.1
-pc1 > wireless > ip : 192.168.1.3 > subnet maskv> gateway : 192.168.0.1
-pc2 > wireless > ip : 172.16.10.2 > subnet mask > gateway ; 172.16.10.1
-pc3 > wireless > ip : 172.16.10.3> subnet mask > gateway : 172.16.10.1
+df["Marks"] = [45,46,47,48]
+df
 
-accesspoint 1 > config > port 1 > SSID : Cs and ame for acess point 2 with it
-select WPA2-PSKand pasword : csdepartment and ame for IT
-pc > config > wwireless0 > SSID cs > WPA2=PSK  and pass phrase ; csdepartment and same for IT
-2 pc for cs and 2 pc for IT
-and send package or ping
+df['Results'] = df['Marks'] > 18
+df
 
-===================================================== Radio Interface =====================================
+df['remarks'] = df["Marks"] < 45 
+df
 
-Objective:  How to configure radio settings for the wireless device.
+import pandas as pd
+import numpy as np
+df1=pd.DataFrame({"A" : [11,12,13] , "B" : [24,25,26], "C" : [37,38,39]})
+df1=df1.assign(D=lambda x: x["A"] + x["B"])
+df1=df1.assign(E=lambda x: x["A"] + x["C"])
+df1
 
-Enabling the Radio Interface 
-The wireless device radios are disabled by default. 
+import numpy as np
+import pandas as pd
+df2 = pd.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+df2 = df2.assign(C=lambda x: x['A'] + x['B'])
+df2 = df2.assign(D=lambda x: x['A'] + x['C'])
+df2
 
-Beginning in privileged EXEC mode, follow these steps to enable the access point radio:
+df1-df2.iloc[2]
 
+df1
 
+df1[:].T
 
-Use the shutdown command to disable the radio port. 
-Configuring Radio Data Rates
-You use the data rate settings to choose the data rates the access point/bridge uses for data transmission. The rates are expressed in megabits per second. The access point/bridge always attempts to transmit at the highest data rate set to Basic, also called Require on the browser-based interface. If there are obstacles or interference, the access point/bridge steps down to the highest rate that allows data transmission. You can set each data rate to one of three states:
-•Basic (this is the default state for all data rates)—Allows transmission at this rate for all packets, both unicast and multicast. At least one of the access point/bridge's data rates must be set to Basic.
-•Enabled—The access point/bridge transmits only unicast packets at this rate; multicast packets are sent at one of the data rates set to Basic.
-•Disabled—The access point/bridge does not transmit data at this rate.
+del df1["C"]
 
+df1
 
+df1.pop("D")
+
+df1
+
+========================================= pivoting ====================================================
+
+import pandas as pd
+import numpy as np
+data = pd.DataFrame(np.arange(6).reshape((2,3)),index=pd.Index(["India" , "USA"] ,name="Country"),
+                    columns=pd.Index(["one","two","three"],name='number'))
+data
+
+result=data.stack()
+result
+
+result.unstack()
+
+result.unstack(0)
+
+result.unstack("Country")
+============================================ tableau ================================
+
+sales by department(bar chart ) :
+
+sales on columnn and department on rows
+region filed on row beside department(bar chart 2 levels)
+drag region from row and put it on color(bar chart stacked)
+
+sales overttime :
+
+sales on rows and orderdate on columns
+change the orderdate on rows > right click - quarter (q2 2015)
+
+field map :
+
+supertore.csv > double click on state filed > change the location india to United state
+sales filed on color 
+
+symbol map :
+superstore.csv > double click on postal code > drag sales filed on size
+drag profit on color
+
+density map :
+superstore.csv > double click on postal code > drop down menu on marks card > change density
 
  
 </pre>
-<body>
-</html>
+</body>
+ </html>
